@@ -1,0 +1,16 @@
+Description:
+    Generates a feature file to manage a feature of the app
+
+Example:
+    bin/rails generate feature Thing enabled:boolean foo bar
+
+    This will create:
+        config/features/thing_feature.rb
+
+    Then in application.rb:
+        config.x.features.help_center = Features::Thing.new(enabled: false, foo: 'bar', bar: 'baz')
+    With that you can use:
+        App.features.thing.enabled?
+        # => false
+        App.features.thing.foo
+        # => bar

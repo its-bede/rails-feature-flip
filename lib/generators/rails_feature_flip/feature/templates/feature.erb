@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+# Manages features of the application
+module Features
+  # Settings for the feature <%= @klass_name %>
+  class <%= @klass_name %>Feature
+    attr_reader <%= @attributes.collect(&:name).collect{ |attr| ":#{attr}" }.join(', ') %>
+
+    # Constructor for the feature settings
+    <%- @attributes.each do |attribute| -%>
+      # @param <%= attribute.name %> [<%= attribute.type %>] setting of the feature
+    <%- end -%>
+    def initialize(<%= @attributes.collect(&:name).collect{ |attr| "#{attr}:" }.join(', ') %>)
+      <%- @attributes.each do |attribute| -%>
+        @<%= attribute.name %> = <%= attribute.name %>
+      <%- end -%>
+    end
+
+    <%- @boolean_attributes.each do |attribute| -%>
+      # ?-method for the attribute <%= attribute.name %>
+      def <%= attribute.name %>?
+      <%= attribute.name %>
+      end
+    <%- end -%>
+  end
+end
