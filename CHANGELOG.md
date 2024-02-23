@@ -2,4 +2,4 @@
 
 ## [0.1.0] - 2024-02-23
 
-- Initial release
+- start of the gem

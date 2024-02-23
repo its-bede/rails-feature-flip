@@ -2,7 +2,7 @@ Description:
     Generates a feature file to manage a feature of the app
 
 Example:
-    bin/rails generate feature Thing enabled:boolean foo bar
+    bin/rails generate rails_feature_flag:feature Thing enabled:boolean foo bar
 
     This will create:
         config/features/thing_feature.rb

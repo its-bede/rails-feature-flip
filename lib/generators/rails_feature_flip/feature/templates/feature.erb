@@ -17,10 +17,10 @@ module Features
     end
 
     <%- @boolean_attributes.each do |attribute| -%>
-      # ?-method for the attribute <%= attribute.name %>
-      def <%= attribute.name %>?
-      <%= attribute.name %>
-      end
+    # ?-method for the attribute <%= attribute.name %>
+    def <%= attribute.name %>?
+     <%= attribute.name %>
+    end
     <%- end -%>
   end
 end
