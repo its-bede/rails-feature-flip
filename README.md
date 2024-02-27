@@ -1,8 +1,38 @@
 # RailsFeatureFlip
 
-TODO: Delete this and the text below, and describe your gem
+This gem provides a generator to create feature flip config classes that can be used to define what features can be used in what stage and/or how they should behave in what stage.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rails/feature/flip`. To experiment with that code, run `bin/console` for an interactive prompt.
+
+## Example
+
+    bin/rails generate rails_feature_flag:feature Thing enabled:boolean foo bar
+
+    This will create:
+        config/features/thing_feature.rb
+
+    Then in application.rb:
+        config.x.features.help_center = Features::Thing.new(enabled: false, foo: 'bar', bar: 'baz')
+    With that you can use:
+        App.features.thing.enabled?
+        # => false
+        App.features.thing.foo
+        # => bar
+
+The main benefit over the default `config.x` namespace is the readability in code whereas 
+
+    if App.features.thing.enabled?
+      # do something with feature "thing"
+    end
+
+is more readable than
+
+    if Rails.env.development?
+      # do something with feature "thing" in development stage
+    elsif Rails.env.test?
+      # do something with feature "thing" in test stage
+    else
+      # do something with feature "thing" in production stage
+    end
 
 ## Installation
 
