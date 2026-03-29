@@ -31,14 +31,14 @@ module RailsFeatureFlip
 
     def save_feature_state(feature, overrides)
       overrides.each_with_object({}) do |(attr, value), originals|
-        originals[attr] = feature.instance_variable_get(:"@#{attr}")
-        feature.instance_variable_set(:"@#{attr}", value)
+        originals[attr] = feature.public_send(attr)
+        feature.public_send(:"#{attr}=", value)
       end
     end
 
     def restore_feature_state(feature, originals)
       originals&.each do |attr, value|
-        feature.instance_variable_set(:"@#{attr}", value)
+        feature.public_send(:"#{attr}=", value)
       end
     end
   end

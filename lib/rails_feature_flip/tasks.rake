@@ -24,10 +24,12 @@ desc 'List all registered features (alias for features:list)'
 task features: 'features:list'
 
 def feature_attributes(feature)
-  ivars = feature.instance_variables - [:@enabled]
-  ivars.map do |ivar|
-    "#{ivar.to_s.delete_prefix('@')}: #{feature.instance_variable_get(ivar).inspect}"
-  end.join(', ')
+  if feature.respond_to?(:attributes)
+    feature.attributes.except('enabled').map { |k, v| "#{k}: #{v.inspect}" }.join(', ')
+  else
+    ivars = feature.instance_variables - [:@enabled]
+    ivars.map { |ivar| "#{ivar.to_s.delete_prefix('@')}: #{feature.instance_variable_get(ivar).inspect}" }.join(', ')
+  end
 end
 
 def print_feature_table(headers, rows)

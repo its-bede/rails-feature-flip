@@ -1,19 +1,25 @@
 Description:
-    Generates a feature file to manage a feature of the app
+    Generates a feature file to manage a feature of the app.
+    Uses ActiveModel::Attributes for type casting and defaults.
 
 Example:
-    bin/rails generate rails_feature_flip:feature Thing enabled:boolean foo bar
+    bin/rails generate rails_feature_flip:feature Thing max_results:integer
 
     With default values:
-    bin/rails generate rails_feature_flip:feature Thing enabled:boolean foo --defaults enabled:false foo:bar
+    bin/rails generate rails_feature_flip:feature Thing max_results:integer --defaults enabled:false max_results:10
+
+    Without the auto-added enabled attribute:
+    bin/rails generate rails_feature_flip:feature Thing foo --no-enabled
 
     This will create:
         config/features/thing_feature.rb
 
     Then in application.rb:
-        config.x.features.thing = Features::ThingFeature.new(enabled: false, foo: 'bar')
+        config.x.features.thing = Features::ThingFeature.new(enabled: true, max_results: 10)
     With that you can use:
         App.features.thing.enabled?
-        # => false
-        App.features.thing.foo
-        # => bar
+        # => true
+        App.features.thing.max_results
+        # => 10
+
+    Supported types: boolean, integer, float, string (default)

@@ -1,25 +1,28 @@
 # frozen_string_literal: true
 
+require 'active_model'
+
 # Manages features of the application
 module Features
   # Settings for the feature <%= @klass_name %>
   class <%= @klass_name %>Feature
-    attr_reader <%= @attributes.collect(&:name).collect{ |attr| ":#{attr}" }.join(', ') %>
+    include ActiveModel::Attributes
+    include ActiveModel::AttributeAssignment
 
-    # Constructor for the feature settings
     <%- @attributes.each do |attribute| -%>
-      # @param <%= attribute.name %> [<%= attribute.type %>] setting of the feature
+    <%= attribute_declaration(attribute) %>
     <%- end -%>
-    def initialize(<%= initialize_params %>)
-      <%- @attributes.each do |attribute| -%>
-        @<%= attribute.name %> = <%= attribute.name %>
-      <%- end -%>
-    end
 
+    # @param attrs [Hash] attribute values to initialize with
+    def initialize(**attrs)
+      super()
+      assign_attributes(attrs) unless attrs.empty?
+    end
     <%- @boolean_attributes.each do |attribute| -%>
+
     # ?-method for the attribute <%= attribute.name %>
     def <%= attribute.name %>?
-     <%= attribute.name %>
+      <%= attribute.name %>
     end
     <%- end -%>
   end

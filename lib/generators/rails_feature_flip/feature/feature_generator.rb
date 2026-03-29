@@ -7,7 +7,7 @@ module RailsFeatureFlip
       source_root File.expand_path('templates', __dir__)
 
       argument :attributes, type: :array, default: [],
-                            banner: 'config_key[:boolean] (:boolean will generate a ? method)'
+                            banner: 'config_key[:type] (supported types: boolean, integer, float, string)'
 
       class_option :defaults, type: :hash, default: {},
                               desc: 'Default values for attributes (e.g. --defaults enabled:false amount:100)'
@@ -36,32 +36,36 @@ module RailsFeatureFlip
         [enabled_attr] + attrs
       end
 
-      # Renders keyword arguments with optional defaults for the initialize method
-      def initialize_params
-        @attributes.map do |attr|
-          default = @defaults[attr.name]
-          if default
-            "#{attr.name}: #{format_default(attr, default)}"
-          else
-            "#{attr.name}:"
-          end
-        end.join(', ')
+      # Renders an ActiveModel attribute declaration line
+      def attribute_declaration(attr)
+        type = activemodel_type(attr)
+        default = @defaults[attr.name]
+        parts = ["attribute :#{attr.name}, :#{type}"]
+        parts << "default: #{format_default(type, default)}" if default
+        parts.join(', ')
       end
 
-      # Formats a default value as valid Ruby based on the attribute type
-      def format_default(attr, value)
+      def activemodel_type(attr)
         case attr.type.to_s
-        when 'boolean'
-          value.to_s == 'true' ? 'true' : 'false'
-        else
-          numeric?(value) ? value : "'#{value}'"
+        when 'boolean' then 'boolean'
+        when 'integer' then 'integer'
+        when 'float' then 'float'
+        else 'string'
         end
       end
 
-      def numeric?(value)
-        true if Float(value)
-      rescue ArgumentError, TypeError
-        false
+      # Formats a default value as valid Ruby for the attribute declaration
+      def format_default(type, value)
+        case type
+        when 'boolean'
+          value.to_s == 'true' ? 'true' : 'false'
+        when 'integer'
+          value.to_s.to_i.to_s
+        when 'float'
+          value.to_s.to_f.to_s
+        else
+          "'#{value}'"
+        end
       end
     end
   end

@@ -2,21 +2,26 @@
 
 require_relative '../test_helper'
 require 'rails_feature_flip/test_helper'
+require 'active_model'
 
 class TestTestHelper < Minitest::Test
   include RailsFeatureFlip::TestHelper
 
-  # Mimics the generated feature class pattern (attr_reader + instance variables)
+  # Mimics the ActiveModel-backed generated feature class pattern
   class SampleFeature
-    attr_reader :enabled, :max_results
+    include ActiveModel::Attributes
+    include ActiveModel::AttributeAssignment
 
-    def initialize(enabled:, max_results:)
-      @enabled = enabled
-      @max_results = max_results
+    attribute :enabled, :boolean, default: false
+    attribute :max_results, :integer, default: 10
+
+    def initialize(**attrs)
+      super()
+      assign_attributes(attrs) unless attrs.empty?
     end
 
     def enabled?
-      @enabled
+      enabled
     end
   end
 
