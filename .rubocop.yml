@@ -1,3 +1,5 @@
+inherit_from: []
+
 plugins:
   - rubocop-minitest
   - rubocop-rake
