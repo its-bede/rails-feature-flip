@@ -7,9 +7,11 @@ class RailsFeatureTestFlip < Minitest::Test
     refute_nil ::RailsFeatureFlip::VERSION
   end
 
-  # TODO: add useful tests
-  #       e.g. generated feature file check
-  def test_it_does_something_useful
-    assert true
+  def test_version_is_a_string
+    assert_kind_of String, ::RailsFeatureFlip::VERSION
+  end
+
+  def test_error_inherits_from_standard_error
+    assert_operator RailsFeatureFlip::Error, :<, StandardError
   end
 end
