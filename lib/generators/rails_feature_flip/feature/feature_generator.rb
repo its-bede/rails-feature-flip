@@ -11,12 +11,14 @@ module RailsFeatureFlip
 
       class_option :defaults, type: :hash, default: {},
                               desc: 'Default values for attributes (e.g. --defaults enabled:false amount:100)'
+      class_option :enabled, type: :boolean, default: true,
+                             desc: 'Add enabled:boolean attribute (use --no-enabled to skip)'
 
       # Generate a feature
       def generate_feature
         @name = name.underscore.downcase
         @klass_name = class_name
-        @attributes = attributes
+        @attributes = prepend_enabled_attribute(attributes)
         @boolean_attributes = @attributes.select { |attr| attr.type == :boolean }
         @defaults = options[:defaults]
 
@@ -24,6 +26,15 @@ module RailsFeatureFlip
       end
 
       private
+
+      # Prepends enabled:boolean unless --no-enabled or already specified
+      def prepend_enabled_attribute(attrs)
+        return attrs unless options[:enabled]
+        return attrs if attrs.any? { |attr| attr.name == 'enabled' }
+
+        enabled_attr = Rails::Generators::GeneratedAttribute.parse('enabled:boolean')
+        [enabled_attr] + attrs
+      end
 
       # Renders keyword arguments with optional defaults for the initialize method
       def initialize_params
