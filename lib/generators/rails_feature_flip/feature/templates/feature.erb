@@ -4,26 +4,32 @@ require 'active_model'
 
 # Manages features of the application
 module Features
-  # Settings for the feature <%= @klass_name %>
-  class <%= @klass_name %>Feature
-    include ActiveModel::Attributes
-    include ActiveModel::AttributeAssignment
+<%- @namespace_parts.each_with_index do |ns, i| -%>
+<%= '  ' * (i + 1) %>module <%= ns %>
+<%- end -%>
+<%= '  ' * (@namespace_parts.size + 1) %># Settings for the feature <%= @feature_class_name %>
+<%= '  ' * (@namespace_parts.size + 1) %>class <%= @feature_class_name %>
+<%= '  ' * (@namespace_parts.size + 2) %>include ActiveModel::Attributes
+<%= '  ' * (@namespace_parts.size + 2) %>include ActiveModel::AttributeAssignment
 
-    <%- @attributes.each do |attribute| -%>
-    <%= attribute_declaration(attribute) %>
-    <%- end -%>
+<%- @attributes.each do |attribute| -%>
+<%= '  ' * (@namespace_parts.size + 2) %><%= attribute_declaration(attribute) %>
+<%- end -%>
 
-    # @param attrs [Hash] attribute values to initialize with
-    def initialize(**attrs)
-      super()
-      assign_attributes(attrs) unless attrs.empty?
-    end
-    <%- @boolean_attributes.each do |attribute| -%>
+<%= '  ' * (@namespace_parts.size + 2) %># @param attrs [Hash] attribute values to initialize with
+<%= '  ' * (@namespace_parts.size + 2) %>def initialize(**attrs)
+<%= '  ' * (@namespace_parts.size + 3) %>super()
+<%= '  ' * (@namespace_parts.size + 3) %>assign_attributes(attrs) unless attrs.empty?
+<%= '  ' * (@namespace_parts.size + 2) %>end
+<%- @boolean_attributes.each do |attribute| -%>
 
-    # ?-method for the attribute <%= attribute.name %>
-    def <%= attribute.name %>?
-      <%= attribute.name %>
-    end
-    <%- end -%>
-  end
+<%= '  ' * (@namespace_parts.size + 2) %># ?-method for the attribute <%= attribute.name %>
+<%= '  ' * (@namespace_parts.size + 2) %>def <%= attribute.name %>?
+<%= '  ' * (@namespace_parts.size + 3) %><%= attribute.name %>
+<%= '  ' * (@namespace_parts.size + 2) %>end
+<%- end -%>
+<%= '  ' * (@namespace_parts.size + 1) %>end
+<%- @namespace_parts.size.downto(1) do |i| -%>
+<%= '  ' * i %>end
+<%- end -%>
 end

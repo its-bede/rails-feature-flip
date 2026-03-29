@@ -138,6 +138,40 @@ class TestFeatureGenerator < Rails::Generators::TestCase
     assert_predicate feature, :enabled?
   end
 
+  def test_generates_namespaced_feature_in_subdirectory
+    run_generator %w[Billing::InvoicePdf max:integer]
+
+    assert_file 'config/features/billing/invoice_pdf_feature.rb' do |content|
+      assert_match(/module Features/, content)
+      assert_match(/module Billing/, content)
+      assert_match(/class InvoicePdfFeature/, content)
+      assert_match(/attribute :enabled, :boolean/, content)
+      assert_match(/attribute :max, :integer/, content)
+    end
+  end
+
+  def test_generates_deeply_nested_namespace
+    run_generator %w[Billing::Subscriptions::Plan tier --no-enabled]
+
+    assert_file 'config/features/billing/subscriptions/plan_feature.rb' do |content|
+      assert_match(/module Billing/, content)
+      assert_match(/module Subscriptions/, content)
+      assert_match(/class PlanFeature/, content)
+    end
+  end
+
+  def test_namespaced_feature_class_is_valid_ruby
+    run_generator %w[Billing::InvoicePdf max:integer]
+
+    feature_file = File.join(destination_root, 'config/features/billing/invoice_pdf_feature.rb')
+    load feature_file
+
+    feature = Features::Billing::InvoicePdfFeature.new(enabled: true, max: 25)
+
+    assert_predicate feature, :enabled?
+    assert_equal 25, feature.max
+  end
+
   def test_generated_feature_type_casts_values
     run_generator %w[Limit max:integer active:boolean --no-enabled]
 

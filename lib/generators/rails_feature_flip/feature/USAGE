@@ -8,6 +8,9 @@ Example:
     With default values:
     bin/rails generate rails_feature_flip:feature Thing max_results:integer --defaults enabled:false max_results:10
 
+    Namespaced feature (creates config/features/billing/invoice_pdf_feature.rb):
+    bin/rails generate rails_feature_flip:feature Billing::InvoicePdf max:integer
+
     Without the auto-added enabled attribute:
     bin/rails generate rails_feature_flip:feature Thing foo --no-enabled
 

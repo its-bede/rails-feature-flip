@@ -17,7 +17,9 @@ module RailsFeatureFlip
       # Generate a feature
       def generate_feature
         @name = name.underscore.downcase
-        @klass_name = class_name
+        parts = class_name.split('::')
+        @namespace_parts = parts[0..-2]
+        @feature_class_name = "#{parts.last}Feature"
         @attributes = prepend_enabled_attribute(attributes)
         @boolean_attributes = @attributes.select { |attr| attr.type == :boolean }
         @defaults = options[:defaults]
