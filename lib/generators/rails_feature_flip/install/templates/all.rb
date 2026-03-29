@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # Load all features from config/features
-Dir.entries('config/features').reject { |f| File.directory?(f) }.sort.each do |feature|
+features_dir = File.expand_path('..', __FILE__)
+Dir.entries(features_dir).reject { |f| File.directory?(f) }.sort.each do |feature|
   next if feature == 'all.rb'
 
   require_relative feature.chomp('.rb')

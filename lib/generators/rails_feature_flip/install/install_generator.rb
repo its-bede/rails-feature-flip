@@ -11,7 +11,7 @@ module RailsFeatureFlip
 
       # Creates RAILS_ROOT/config/features folder unless it exists
       def setup_features_dir
-        Dir.mkdir(Rails.root.join('config/feature')) unless Dir.exist?(Rails.root.join('config/feature'))
+        Dir.mkdir(Rails.root.join('config/features')) unless Dir.exist?(Rails.root.join('config/features'))
       end
 
       # Copy default loading file to autoload all features inside the features folder
@@ -44,8 +44,8 @@ module RailsFeatureFlip
 
       def display_post_install_message
         say "RailsFeatureFlip has been successfully installed!"
-        say "You can now generate feature setting by running the 'rails_feature_flag:feature' generator."
-        say "Run 'bin/rails generate rails_feature_flag:feature -h' for usage details."
+        say "You can now generate feature setting by running the 'rails_feature_flip:feature' generator."
+        say "Run 'bin/rails generate rails_feature_flip:feature -h' for usage details."
       end
     end
   end

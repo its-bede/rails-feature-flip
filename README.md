@@ -5,7 +5,7 @@ This gem provides a generator to create feature flip config classes that can be 
 
 ## Example
 
-    bin/rails generate rails_feature_flag:feature Thing enabled:boolean foo bar
+    bin/rails generate rails_feature_flip:feature Thing enabled:boolean foo bar
 
     This will create:
         config/features/thing_feature.rb
