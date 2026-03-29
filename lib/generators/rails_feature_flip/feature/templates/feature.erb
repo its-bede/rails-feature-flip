@@ -10,7 +10,7 @@ module Features
     <%- @attributes.each do |attribute| -%>
       # @param <%= attribute.name %> [<%= attribute.type %>] setting of the feature
     <%- end -%>
-    def initialize(<%= @attributes.collect(&:name).collect{ |attr| "#{attr}:" }.join(', ') %>)
+    def initialize(<%= initialize_params %>)
       <%- @attributes.each do |attribute| -%>
         @<%= attribute.name %> = <%= attribute.name %>
       <%- end -%>

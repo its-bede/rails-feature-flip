@@ -50,6 +50,43 @@ class TestFeatureGenerator < Rails::Generators::TestCase
     end
   end
 
+  def test_generates_attributes_with_defaults
+    run_generator %w[Payment enabled:boolean amount --defaults enabled:false amount:100]
+
+    assert_file 'config/features/payment_feature.rb' do |content|
+      assert_match(/def initialize\(enabled: false, amount: 100\)/, content)
+    end
+  end
+
+  def test_generates_string_defaults_with_quotes
+    run_generator %w[Notify channel --defaults channel:general]
+
+    assert_file 'config/features/notify_feature.rb' do |content|
+      assert_match(/def initialize\(channel: 'general'\)/, content)
+    end
+  end
+
+  def test_generates_attributes_without_defaults_when_not_specified
+    run_generator %w[Payment enabled:boolean amount]
+
+    assert_file 'config/features/payment_feature.rb' do |content|
+      assert_match(/def initialize\(enabled:, amount:\)/, content)
+    end
+  end
+
+  def test_generated_feature_with_defaults_is_valid_ruby
+    run_generator %w[Notify active:boolean channel --defaults active:true channel:general]
+
+    feature_file = File.join(destination_root, 'config/features/notify_feature.rb')
+    load feature_file
+
+    feature = Features::NotifyFeature.new
+
+    assert feature.active
+    assert_equal 'general', feature.channel
+    assert_predicate feature, :active?
+  end
+
   def test_generated_feature_class_is_valid_ruby
     run_generator %w[Search enabled:boolean max_results]
 
